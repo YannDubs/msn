@@ -27,22 +27,22 @@ parser.add_argument(
 parser.add_argument(
     '--folder', type=str,
     help='location to save submitit logs',
-    default='/checkpoint/submitit/')
+    default='./logs')
 parser.add_argument(
     '--fname', type=str,
     help='yaml file containing config file names to launch',
     default='configs.yaml')
 parser.add_argument(
-    '--partition', type=str,
+    '--partition', type=str, default="sphinx",
     help='cluster partition to submit jobs on')
 parser.add_argument(
     '--nodes', type=int, default=1,
     help='num. nodes to request for job')
 parser.add_argument(
-    '--tasks-per-node', type=int, default=1,
+    '--tasks-per-node', type=int, default=4,
     help='num. procs to per node')
 parser.add_argument(
-    '--time', type=int, default=4300,
+    '--time', type=int, default=16000,
     help='time in minutes to run job')
 
 
@@ -90,11 +90,11 @@ def launch():
     executor = submitit.AutoExecutor(folder=args.folder)
     executor.update_parameters(
         slurm_partition=args.partition,
-        slurm_mem_per_gpu='55G',
+        slurm_mem_per_gpu='100G',
         timeout_min=args.time,
         nodes=args.nodes,
         tasks_per_node=args.tasks_per_node,
-        cpus_per_task=10,
+        cpus_per_task=32,
         gpus_per_node=args.tasks_per_node)
 
     config_file = args.fname
